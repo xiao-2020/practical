@@ -66,12 +66,12 @@
   * 减少css选择器的层级， 在js中尽量使用id选择元素；
   * 不声明过多的font-size； 这样会引起css树生成的效率低下 
 ### * 简述浏览器存储有哪几种方式？有什么样的区别？ cookie存储有什么坏处？
-  #### 浏览器存储包含有4中 localStorage、 sessionStorage、 cookie 以及 indexedDB
-    * cookie： cookie用来做存储最致命的坏处就是会随着请求发送给服务器，增加http请求体的体积，降低数据传输的效率；另外大小不能超过4k；
-    * localStorage 和 sessionStorage 基本上api是一致的；他们根本的区别在于sessionStorage伴随着当前会话存在的，不会在其他页面被共享，随着当前标签页的关闭会清空，而前者不会清空，并且会共享；两者的大小限制一般都是5M
-    * indexedDB ： 是一种底层的api，是一种基于事务的事务型数据库系统，类似于sql。然后不同的是，它使用固定列表，是一个基于javaScript的面向对象的数据库。 具体用法： [#https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API]
+  #### 浏览器存储包含有4中 localStorage、 sessionStorage、 cookie 以及 indexedDB.
+  * cookie： cookie用来做存储最致命的坏处就是会随着请求发送给服务器，增加http请求体的体积，降低数据传输的效率；另外大小不能超过4k；
+  * localStorage 和 sessionStorage 基本上api是一致的；他们根本的区别在于sessionStorage伴随着当前会话存在的，不会在其他页面被共享，随着当前标签页的关闭会清空，而前者不会清空，并且会共享；两者的大小限制一般都是5M
+  * indexedDB ： 是一种底层的api，是一种基于事务的事务型数据库系统，类似于sql。然后不同的是，它使用固定列表，是一个基于javaScript的面向对象的数据库。 具体用法： [#https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API]
 ### * 如何实现```rem```？ 输入代码。
-  
+
 ### * 如何准确校验一个对象的数据类型？
 
 ### * 简述JS单线程 ```event loop```？
