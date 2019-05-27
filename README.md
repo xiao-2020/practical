@@ -106,21 +106,21 @@
     其中 ```typeof null```  ```typeof {}```  ```typeof []``` 都是 ```Object```; 这个关键字并无法区分具体的类型；
   * 准确判断一个对象的数据类型最有效的方式就是使用 ``` Object.prototype.toString.call()```
     ``` 
-      Object.prototype.toString.call({})：[object Object];
+      Object.prototype.toString.call({}) === [object Object]
 
-      Object.prototype.toString.call(222)：[object Number] 
-      
-      Object.prototype.toString.call('a')：[object String] 
+      Object.prototype.toString.call(222) === [object Number] 
 
-      Object.prototype.toString.call(undefined)：[object Undefined] 
+      Object.prototype.toString.call('a') === [object String] 
 
-      Object.prototype.toString.call([])：[object Array] 
+      Object.prototype.toString.call(undefined) === [object Undefined] 
 
-      Object.prototype.toString.call(function(){})：[object Function] 
+      Object.prototype.toString.call([]) === [object Array] 
 
-      Object.prototype.toString.call(null)：[object Null] 
+      Object.prototype.toString.call(function(){}) === [object Function] 
 
-      Object.prototype.toString.call(false)：[object Boolean]
+      Object.prototype.toString.call(null) === [object Null] 
+
+      Object.prototype.toString.call(false) === [object Boolean]
 
     ```
 
@@ -169,7 +169,63 @@
     ```
     这样， 便能无限制的调用此fn函数了，当然，如果你电脑配置不好 最好设置循环次数小一点，以免卡死。 根据打印出来的效果就能看到，这样的调用栈就只又三个，因为 全局调用栈 执行到 recustionTool时，形成了上下文，每次执行 fn的时候再形成fn 的上下文，但是 fn执行完了之后便结束，会跳出当前上下文，栈针从新指向了上一级也就是递归工具函数的上下文，因此， 无论循环多少次，此调用栈最多也就三个执行任务，三个执行上下文，永远不可能出现栈溢出。 当然还有其他方式，理论上都是一致的，只要知道了原因，解决起来还是很简单的。
 ### * 简述 ```js``` 实现继承的几个方法， 分别由什么优缺点？
+  定义一个父类
+  ```
+    function Animal (name) {
+      this.name = name
+      this.sleep = function () {
+        console.log('shuijiao')
+      }
+    } 
+    Animal.prototype = {
+      eat: function (food) {
+        console.log('吃' + food)
+      }
+    }
+  ```
+  * 原型链继承
+    将子类的原型指向父类的实例
+    优点： 父类新增方法，所有子类都可以访问到，实现简单；
+    缺点: 来自原型对象上的所有引用类型属性被所有实例共享； 创建子类实例时，无法向父类传参数；
+    ```
+      function Cat(){ 
+      }
+      Cat.prototype = new Animal();
+      Cat.prototype.name = 'cat';
+    ```
+  * 构造继承
+    直接再子类构造器里使用父类构造函数扩充；
+    ```
+      function Cat() {
+        Animal.call(this, 'cat')
+      }
+    ```
+    优点： 可以实现继承多个父类； 可以传参数;  父类引用属性不共享；
+    缺点： 实例不继承父类； 不能继承父类的原型上的属性和方法； 无法复用， 每个子类都又父类函数的副本
+  * 实例继承
+    直接再子类构造函数内返回父类的实例
+    ```
+      function Cat(name) {
+        let instance = new Animal(name)
+        // instance.age = 1   可以为父类实例添加新特性
+        return instance
+      }
+    ```
+    优点： 不管用不用new 关键字， 调用就会产生一个继承了父类的实例
+    缺点： 实例是父类的实例，不是子类的； 无法多继承
+  * copy继承
+    直接在子类构造器里将父类的属性遍历出来添加到 子类  ； 此方式性能低， 不再讲诉；
+  * 组合继承
+    通过构造继承，继承并保留传参 的优点，然后通过父类的实例作为子类的原型，实现函数复用
+    ```
+      function Cat() {
+        Animal.call(this)
+      }
+      Cat.prototype = new Animal()
 
+      <!-- 需要修复构造函数指向 -->
+      Cat.prototype.constructor = Cat
+    ```
 ### * ```new``` 一个对象 经历了哪几步?
   new 一个对象 总共分4步  以 ``new Class()`` 为例：
   * 先创建一个空对象，用于存值 ``var obj = {}``
