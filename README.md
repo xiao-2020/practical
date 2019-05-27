@@ -71,8 +71,48 @@
   * localStorage 和 sessionStorage 基本上api是一致的；他们根本的区别在于sessionStorage伴随着当前会话存在的，不会在其他页面被共享，随着当前标签页的关闭会清空，而前者不会清空，并且会共享；两者的大小限制一般都是5M
   * indexedDB ： 是一种底层的api，是一种基于事务的事务型数据库系统，类似于sql。然后不同的是，它使用固定列表，是一个基于javaScript的面向对象的数据库。 具体用法： [#https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API]
 ### * 如何实现```rem```？ 输入代码。
-
+  ```rem``` 是一种只自适应方案的css单位，其值相对于html根元素的font-size 的大小。根元素默认字体大小一般都是 16px。一般在的移动端使用较为广泛，由于移动端尺寸参差不齐，实现rem的方式一般是根据文档的宽高和当前设计图尺寸，使之按照一定的规则使得在不同屏幕宽度下 能够使得测量的效果图尺寸直接 / 100 得到正确的rem的值；具体代码如下：
+  ```
+    // 声明一个函数，用于初始化和窗口变化时，实时计算出根元素所应该设置的font-size的值
+    /**
+     * @params [Number] UISize 传入当前项目UI效果图设计的尺寸  默认值 750   即 375px的物理像素
+    */ 
+    function initRootHtmlFontSize(UISize = 750) {
+      // 获取根节点
+      let docEl = document.documentElement,
+        // 事件名称  用于绑定 全局事件  
+        resizeEvent = 'orientationchange' in window ? 'orientationchange' : 'resize';
+      let reCalc = UISize => {
+        // 取出屏幕宽度
+        let windowWidth = docEl.clientWidth;
+        if(!windowWidth) return
+        // 一般大于设计图尺寸的屏幕  就按照 原始尺寸即可  有特殊要求 可另外处理 
+        if(windowWidth > UISize)  {
+          docEl.style.fontSize = '100px'
+        } else {
+          // 此处意思即为  按照将屏幕宽度 与 UI 宽度的比值 换算 出 字体相对于 100 px时 应该设置的 大小   保证算出的rem 都是直接那 测量值 / 100  就是 准确的 rem 值
+          docEl.style.fontSize = windowWidth / UISize * 100 + 'px'
+        }
+      }
+      // 绑定时间
+      window.addEventListener(resizeEvent, reCalc, false)
+      winow.addEventListener('DOMContentLoaded', reCalc, false)
+      // 调用
+      reCalc(UISize)
+    }
+  ```
 ### * 如何准确校验一个对象的数据类型？
+  * 使用 ```typeof ```可以对数据进行简单的判断
+    其中 ```typeof null```  ```typeof {}```  ```typeof []``` 都是 ```Object```; 这个关键字并无法区分具体的类型；
+  * 准确判断一个对象的数据类型最有效的方式就是使用 ``` Object.prototype.toString.call()```
+    ``` Object.prototype.toString.call({})``` : ```[object Object]```
+    ``` Object.prototype.toString.call(222)``` : ```[object Number]```
+    ``` Object.prototype.toString.call('a')``` : ```[object String]```
+    ``` Object.prototype.toString.call(undefined)``` : ```[object Undefined]```
+    ``` Object.prototype.toString.call([])``` : ```[object Array]```
+    ``` Object.prototype.toString.call(function(){})``` : ```[object Function]```
+    ``` Object.prototype.toString.call(null)``` : ```[object Null]```
+    ``` Object.prototype.toString.call(false)``` : ```[object Boolean]```
 
 ### * 简述JS单线程 ```event loop```？
 
