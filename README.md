@@ -105,14 +105,24 @@
   * 使用 ```typeof ```可以对数据进行简单的判断
     其中 ```typeof null```  ```typeof {}```  ```typeof []``` 都是 ```Object```; 这个关键字并无法区分具体的类型；
   * 准确判断一个对象的数据类型最有效的方式就是使用 ``` Object.prototype.toString.call()```
-    ``` Object.prototype.toString.call({})``` : ```[object Object]```
-    ``` Object.prototype.toString.call(222)``` : ```[object Number]```
-    ``` Object.prototype.toString.call('a')``` : ```[object String]```
-    ``` Object.prototype.toString.call(undefined)``` : ```[object Undefined]```
-    ``` Object.prototype.toString.call([])``` : ```[object Array]```
-    ``` Object.prototype.toString.call(function(){})``` : ```[object Function]```
-    ``` Object.prototype.toString.call(null)``` : ```[object Null]```
-    ``` Object.prototype.toString.call(false)``` : ```[object Boolean]```
+    ``` 
+      Object.prototype.toString.call({})：[object Object];
+
+      Object.prototype.toString.call(222)：[object Number] 
+      
+      Object.prototype.toString.call('a')：[object String] 
+
+      Object.prototype.toString.call(undefined)：[object Undefined] 
+
+      Object.prototype.toString.call([])：[object Array] 
+
+      Object.prototype.toString.call(function(){})：[object Function] 
+
+      Object.prototype.toString.call(null)：[object Null] 
+
+      Object.prototype.toString.call(false)：[object Boolean]
+
+    ```
 
 ### * 简述JS单线程 ```event loop```？
   * 总所周知：js是单线程。 也就是同一时间只能干一件事情。 这个是因为js本身的用途就是作为浏览器的脚本语言，与用户交互，操作DOM。如果js是多线程的话，一个线程为某个节点添加了内容，一个线程将这个节点删除， 那就乱套了。所以单线程就意味着所有的事件都要排队，只能一个一个来。js的设计者为了避免前一个任务（尤其是IO设备的数据读取）耗时过长引起的后面的任务被阻塞的问题，因此会把任务挂起，吸先执行后面的任务，也就是分成了同步任务，和异步任务， 其中异步任务又分为 微任务（promise， process.nextTick 等） 和 宏任务（setTimeout， setInterval 等）。
