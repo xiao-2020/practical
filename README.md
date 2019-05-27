@@ -226,6 +226,21 @@
       <!-- 需要修复构造函数指向 -->
       Cat.prototype.constructor = Cat
     ```
+    优点： 即使子类的实例，也是父类的实例； 能传参数； 不存在引用类型属性的共享问题；函数可复用
+    缺点： 调用了两次父类构造函数，生成了两份实例；  子类原型被屏蔽了
+  * 寄生组合继承
+    ```
+      function Cat () {
+        Animal.call(this)
+      }
+      (function () {
+        var super = function() {}
+        super.prototype = new Animal()
+        Cat.prototype = new Super()
+      })()
+      Cat.prototype.constructor = Cat
+    ```
+    缺点： 实现复杂；
 ### * ```new``` 一个对象 经历了哪几步?
   new 一个对象 总共分4步  以 ``new Class()`` 为例：
   * 先创建一个空对象，用于存值 ``var obj = {}``
