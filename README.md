@@ -241,6 +241,8 @@
       Cat.prototype.constructor = Cat
     ```
     缺点： 实现复杂；
+  * class 类继承 
+    定义一个父类 Class 可以通过extends 继承 父类
 ### * ```new``` 一个对象 经历了哪几步?
   new 一个对象 总共分4步  以 ``new Class()`` 为例：
   * 先创建一个空对象，用于存值 ``var obj = {}``
@@ -248,11 +250,30 @@
   * 使用新的对象调用构造函数，函数中的this指向当前对象obj; ``Class.call(obj)``
   * 将初始化完成的对象地址（如果函数执行返回值非饮用类型，那此时会将具体的返回值赋予等号 左边的变量），赋值给等号左边的变量 ; ```var o = new Class()```   即将刚刚生成的obj的对象所在的堆内存的地址赋值给 o；
 ### * 如何实现深度克隆？如何实现一个浅复制？
-
+  * 深度克隆
+    第一种方式： 直接遍历当前对象，然后根据当前对象的属性值是引用类型还是非引用类型 进行复制 或 递归调用
+    ```
+      function deepCopy(o) {
+        let newObj = Object.prototype.toString.call(o) === '[object Array]' ? [] : {}
+        if(o && typeof o === 'object') {
+          for(let key in o) {
+            if(o.hasOwnProperty(key)) {
+              newObj[key] = typeof o[key] === 'object' ? deepCopy(o[key]) : o[key]
+            }
+          }
+        }
+        return newObj
+      }
+    ```
+    第二种方式， 利用JSON的形式
+    ``` let newObj = JSON.parse(JSON.stringify(oldObj))```  
+    注意： 此方式只适合纯数据的clone ；如果对象中有function ，则会被直接忽略， 不会进行复制操作； 使用是建议使用第一种方式。
+  * 浅复制
+    其实浅复制根深度复制基本上差不多，只是在第一次遍历的时候，不需要判定对象值的类型进行下一步的递归。 数组的浅复制可以直接用 slice方法既可实现。
 ### * 如何实现 ```ajax``` 的拦截处理?
 
 ### * 跨域处理的几种方式？如何实现？ 跨域请求到底发出了没有？
-
+  跨域的出现，是由于浏览器的同源策略，
 ### * 什么是 ```XSS``` 和 ```CSRF```？ 如何预防？
 
 ### * ```let```、```const```、```var``` 分别由什么特点？ 各有什么好处或坏处？```var``` 出现变量提升的原理？
