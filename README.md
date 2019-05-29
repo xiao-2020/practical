@@ -273,7 +273,42 @@
 ### * 如何实现 ```ajax``` 的拦截处理?
 
 ### * 跨域处理的几种方式？如何实现？ 跨域请求到底发出了没有？
-  跨域的出现，是由于浏览器的同源策略，
+  跨域的出现，是由于浏览器的同源策略，是不允许 域名 或 端口 或 协议 任一个不同之间的请求是 无法进行访问的。
+  解决的方式也有不少， 这里只具体说个别的： 
+  * JSONP 
+    主要原理是根据静态资源无跨域的限制的原理，通过动态创建script，然后将某个已经在文档里的声明的函数以及请求的其他参数 传给后台，后台将需要的数据按照函数参数的形式， 调用函数， 从而在函数的参数中获取对应的值。
+  ```
+    <script>
+      <!-- 回调函数 -->
+        function jsonpCallback (data) {
+          console.log(data)
+        }
+      <!-- 创建jsonp 请求 -->
+      let scriptNode = document.createElement('script')
+      scriptNode.type = 'text/script'
+      scriptNode.src = 'http:// domian : port / api ? id=1&callback=jsonpCallback'
+      document.body.appendChild(scriptNode)
+    </script>
+  ```
+  * CROS 跨域资源共享
+    主要是依据服务端设置，允许正常的外域访问，来解决跨域访问的问题。
+    CROS请求分两类： 简单请求和非简单请求
+    只要同时满足以下请求的才是简单请求： 
+    （1）满足以下三种请求方法： 
+        * HEAD
+        * GET
+        * POST
+    （2）HTTP的头信息不超过以下字段
+        * Accept
+        * Accept-Language
+        * Content-Language
+        * Content-Type （需要注意额外的限制）： 
+          仅限于以下三个值--- text/plain   multipart/form-data  applacation/x-www-form-urlencoded
+    （3） 请求中没有使用 ReadableStream 对象。
+    （4） 请求中的任意XMLHttpRequestUpload 对象均没有注册任何事件监听器；XMLHttpRequestUpload 对象可以使用        XMLHttpRequest.upload 属性访问
+    其他的一般都属于非简单请求了。
+    一般简单请求只需要将Allow-Control-Access-Origin字段设置为 * 就可以了，可以允许任意外域访问，也可指定某一个确定的域名。但是如果需要带上cookies 的话，那么这个值就要指定为具体的域名了，同时请求和响应都要设置。
+    
 ### * 什么是 ```XSS``` 和 ```CSRF```？ 如何预防？
 
 ### * ```let```、```const```、```var``` 分别由什么特点？ 各有什么好处或坏处？```var``` 出现变量提升的原理？
